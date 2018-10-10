@@ -83,20 +83,22 @@
 //#define GPIO_PROBE_PORT			GPIOC
 //#define GPIO_PROBE_PIN			GPIO_Pin_0
 
+//这里把Y,Z轴交换了下
+
 #define GPIO_STEP_X_PORT		GPIO_STEP_X_GPIO_Port
-#define GPIO_STEP_Y_PORT		GPIO_STEP_Y_GPIO_Port
-#define GPIO_STEP_Z_PORT		GPIO_STEP_Z_GPIO_Port
+#define GPIO_STEP_Y_PORT		GPIO_STEP_Z_GPIO_Port
+#define GPIO_STEP_Z_PORT		GPIO_STEP_Y_GPIO_Port
 #define GPIO_STEP_X_PIN			GPIO_STEP_X_Pin
-#define GPIO_STEP_Y_PIN			GPIO_STEP_Y_Pin
-#define GPIO_STEP_Z_PIN			GPIO_STEP_Z_Pin
+#define GPIO_STEP_Y_PIN			GPIO_STEP_Z_Pin
+#define GPIO_STEP_Z_PIN			GPIO_STEP_Y_Pin
 
 // Direction Pins
 #define GPIO_DIR_X_PORT			GPIO_DIR_X_GPIO_Port
-#define GPIO_DIR_Y_PORT			GPIO_DIR_Y_GPIO_Port
-#define GPIO_DIR_Z_PORT			GPIO_DIR_Z_GPIO_Port
+#define GPIO_DIR_Y_PORT			GPIO_DIR_Z_GPIO_Port
+#define GPIO_DIR_Z_PORT			GPIO_DIR_Y_GPIO_Port
 #define GPIO_DIR_X_PIN			GPIO_DIR_X_Pin
-#define GPIO_DIR_Y_PIN			GPIO_DIR_Y_Pin
-#define GPIO_DIR_Z_PIN			GPIO_DIR_Z_Pin
+#define GPIO_DIR_Y_PIN			GPIO_DIR_Z_Pin
+#define GPIO_DIR_Z_PIN			GPIO_DIR_Y_Pin
 
 // Stepper Enable
 #define GPIO_ENABLE_PORT		GPIO_ENABLE_GPIO_Port

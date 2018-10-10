@@ -551,6 +551,7 @@ void Report_EchoLineReceived(char *line)
 	report_util_feedback_line_feed();
 }
 
+#include "Arm_motion.h"
 
  // Prints real-time data. This function grabs a real-time snapshot of the stepper subprogram
  // and the actual location of the CNC machine. Users may change the following function to their
@@ -563,9 +564,9 @@ void Report_RealtimeStatus(void)
 	int32_t current_position[N_AXIS]; // Copy current state of the system position variable
 	float print_position[N_AXIS];
 
-	memcpy(current_position,sys_position,sizeof(sys_position));
-	System_ConvertArraySteps2Mpos(print_position, current_position);
-
+	memcpy(current_position,sys_position,sizeof(sys_position));	
+	System_ConvertArraySteps2Mpos(print_position, current_position);//在这里把当前的坐标信息发出去的
+	
 	// Report current machine state and sub-states
 	//Putc('\n');
 	Putc('<');
@@ -647,7 +648,15 @@ void Report_RealtimeStatus(void)
 	} else {
 		Printf_MSG("|WPos:");
 	}
-
+  
+	#if defined ARM //发送正解信息 JOG模式下,反解的信息貌似不会通过这里发送
+	ARM_Motion_s arm_position_current;
+	arm_position_current = calculate_forward(print_position);
+	print_position[X_AXIS] = arm_position_current.arm[X_AXIS];
+	print_position[Y_AXIS] = arm_position_current.arm[Y_AXIS];
+	print_position[Z_AXIS] = arm_position_current.arm[Z_AXIS];
+	#endif
+	
 	Report_AxisValue(print_position);
 
 	// Returns planner and serial read buffer states.

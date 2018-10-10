@@ -43,6 +43,7 @@
 "stm32_grbl_advanced\hw_tim.o"
 "stm32_grbl_advanced\global.o"
 "stm32_grbl_advanced\motor_setting.o"
+"stm32_grbl_advanced\arm_motion.o"
 --library_type=microlib --strict --scatter "STM32_GRBl_Advanced\STM32_GRBl_Advanced.sct"
 --summary_stderr --info summarysizes --map --load_addr_map_info --xref --callgraph --symbols
 --info sizes --info totals --info unused --info veneers

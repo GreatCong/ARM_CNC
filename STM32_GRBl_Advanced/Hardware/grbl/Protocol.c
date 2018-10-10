@@ -308,7 +308,7 @@ void Protocol_ExecRtSystem(void)
 
 		// Execute and serial print status
 		if(rt_exec & EXEC_STATUS_REPORT) {
-			Report_RealtimeStatus();
+			Report_RealtimeStatus();//向上位机发送实时信息
 			System_ClearExecStateFlag(EXEC_STATUS_REPORT);
 		}
 

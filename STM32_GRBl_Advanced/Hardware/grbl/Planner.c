@@ -29,6 +29,8 @@
 #include "Stepper.h"
 #include "Planner.h"
 
+#include "Arm_motion.h"
+
 
 // Define planner variables
 typedef struct {
@@ -103,6 +105,11 @@ uint8_t Planner_BufferLine(float *target, Planner_LineData_t *pl_data)
 	int32_t target_steps[N_AXIS], position_steps[N_AXIS];
 	float unit_vec[N_AXIS], delta_mm;
 	uint8_t idx;
+	
+	#ifdef ARM //增加机械臂
+	ARM_Motion_s arm_motion_target;
+//	ARM_Motion_s arm_motion_position;
+	#endif
 
 	// Copy position data based on type of motion being planned.
 	if(block->condition & PL_COND_FLAG_SYSTEM_MOTION) {
@@ -110,6 +117,8 @@ uint8_t Planner_BufferLine(float *target, Planner_LineData_t *pl_data)
 		position_steps[X_AXIS] = system_convert_corexy_to_x_axis_steps(sys_position);
 		position_steps[Y_AXIS] = system_convert_corexy_to_y_axis_steps(sys_position);
 		position_steps[Z_AXIS] = sys_position[Z_AXIS];
+#elif defined ARM //增加机械臂
+		memcpy(position_steps, sys_position, sizeof(sys_position));// sys_position (vector in steps.int32)
 #else
 		memcpy(position_steps, sys_position, sizeof(sys_position));
 #endif
@@ -123,6 +132,9 @@ uint8_t Planner_BufferLine(float *target, Planner_LineData_t *pl_data)
 	target_steps[B_MOTOR] = lround(target[B_MOTOR]*settings.steps_per_mm[B_MOTOR]);
 	block->steps[A_MOTOR] = labs((target_steps[X_AXIS]-position_steps[X_AXIS]) + (target_steps[Y_AXIS]-position_steps[Y_AXIS]));
 	block->steps[B_MOTOR] = labs((target_steps[X_AXIS]-position_steps[X_AXIS]) - (target_steps[Y_AXIS]-position_steps[Y_AXIS]));
+#elif defined ARM //增加机械臂
+	  //将targrt转化为角度坐标
+		arm_motion_target =  calculate_arm(target);
 #endif
 
 	for(idx = 0; idx < N_AXIS; idx++) {
@@ -146,6 +158,13 @@ uint8_t Planner_BufferLine(float *target, Planner_LineData_t *pl_data)
 		else {
 			delta_mm = (target_steps[idx] - position_steps[idx])/settings.steps_per_mm[idx];
 		}
+#elif defined ARM //增加机械臂
+	  //将targrt转化为角度坐标
+		target_steps[idx] = lround(arm_motion_target.arm[idx]*settings.steps_per_mm[idx]);
+		//target_steps[idx] = lround(target[idx]*settings.steps_per_mm[idx]);
+		block->steps[idx] = labs(target_steps[idx]-position_steps[idx]);
+		block->step_event_count = max(block->step_event_count, block->steps[idx]);
+		delta_mm = (target_steps[idx] - position_steps[idx])/settings.steps_per_mm[idx];
 #else
 		target_steps[idx] = lround(target[idx]*settings.steps_per_mm[idx]);
 		block->steps[idx] = labs(target_steps[idx]-position_steps[idx]);

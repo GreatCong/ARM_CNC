@@ -48,6 +48,8 @@
 
 #include "Print.h"
 #include "Motor_setting.h"
+
+#include "Arm_motion.h"
 /* USER CODE END Includes */
 
 /* Private variables ---------------------------------------------------------*/
@@ -87,7 +89,11 @@ void Grbl_setup(void){
     Settings_Init();//从epprom中读取设置
 
     System_ResetPosition();//清除所有的位置信息
-
+	  
+    #ifdef ARM
+	  Arm_motion_reset();//将{0,0,0}转化为角度信息
+	  #endif
+	  
     if(BIT_IS_TRUE(settings.flags, BITFLAG_HOMING_ENABLE)) {
 		sys.state = STATE_ALARM;
     }

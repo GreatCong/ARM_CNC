@@ -636,6 +636,11 @@
               <FileType>1</FileType>
               <FilePath>..\Hardware\Global\Motor_setting.c</FilePath>
             </File>
+            <File>
+              <FileName>Arm_motion.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Hardware\Global\Arm_motion.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

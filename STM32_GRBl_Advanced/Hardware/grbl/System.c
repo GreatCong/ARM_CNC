@@ -453,6 +453,7 @@ float System_ConvertAxisSteps2Mpos(int32_t *steps, uint8_t idx)
 	}
 #else
 	pos = steps[idx]/settings.steps_per_mm[idx];
+
 #endif
 
 	return pos;
