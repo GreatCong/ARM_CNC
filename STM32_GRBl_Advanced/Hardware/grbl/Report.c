@@ -43,6 +43,8 @@
 #include "FIFO_USART.h"
 #include "System32.h"
 
+#include "Arm_motion.h" //Í·ÎÄ¼þ
+
 
 // Internal report utilities to reduce flash with repetitive tasks turned into functions.
 static void Report_SettingPrefix(uint8_t n)
@@ -551,7 +553,6 @@ void Report_EchoLineReceived(char *line)
 	report_util_feedback_line_feed();
 }
 
-#include "Arm_motion.h"
 
  // Prints real-time data. This function grabs a real-time snapshot of the stepper subprogram
  // and the actual location of the CNC machine. Users may change the following function to their

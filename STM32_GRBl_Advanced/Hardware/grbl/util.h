@@ -44,7 +44,8 @@
 
 //#define F_CPU						96000000UL  //STM32F411
 #define F_CPU						72000000UL //STM32F103
-#define F_TIMER_STEPPER             24000000UL
+//#define F_TIMER_STEPPER             24000000UL
+#define F_TIMER_STEPPER             18000000UL
 
 #define N_AXIS						3
 

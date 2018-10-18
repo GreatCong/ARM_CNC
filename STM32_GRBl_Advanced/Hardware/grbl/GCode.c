@@ -522,7 +522,7 @@ uint8_t GC_ExecuteLine(char *line)
 	// [2. Set feed rate mode ]: G93 F word missing with G1,G2/3 active, implicitly or explicitly. Feed rate
 	//   is not defined after switching to G94 from G93.
 	// NOTE: For jogging, ignore prior feed rate mode. Enforce G94 and check for required F word.
-	if(gc_parser_flags & GC_PARSER_JOG_MOTION) {
+	if(gc_parser_flags & GC_PARSER_JOG_MOTION) { //jog模式,忽略 prior feed rate mode
 		if(BIT_IS_FALSE(value_words, BIT(WORD_F))) {
 			return STATUS_GCODE_UNDEFINED_FEED_RATE;
 		}
@@ -1146,7 +1146,7 @@ uint8_t GC_ExecuteLine(char *line)
 		pl_data->spindle_speed = gc_state.spindle_speed;
 		plan_data.condition = (gc_state.modal.spindle | gc_state.modal.coolant);
 
-		uint8_t status = Jog_Execute(&plan_data, &gc_block);
+		uint8_t status = Jog_Execute(&plan_data, &gc_block);//执行jog模式
 		if(status == STATUS_OK) {
 			memcpy(gc_state.position, gc_block.values.xyz, sizeof(gc_block.values.xyz));
 		}

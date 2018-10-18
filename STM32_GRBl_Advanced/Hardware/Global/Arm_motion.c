@@ -16,9 +16,15 @@
 extern int32_t sys_position[N_AXIS];
 
 ARM_Motion_s arm_position_init;//笛卡尔坐标系为(0,0,0)的角度
+char ARM_init_script[] = "G00X220.6Y0Z68.026F100";//初始位置的正解
 
 
 #ifdef ARM
+//  @ fuction:  
+//  @ description:  
+//  @ input:
+//  @ output:
+//  @ note: 余弦定理计算角度
 float return_angle(float a, float b, float c) {
   // cosine rule for angle between c and a
   return acos((a * a + c * c - b * b) / (2 * a * c));
@@ -28,8 +34,25 @@ float return_angle(float a, float b, float c) {
 //  @ description:  
 //  @ input:
 //  @ output:
+//  @ note: 余弦定理检查
+uint8_t check_angle(float a, float b, float c){
+  float data;
+	data = (a * a + c * c - b * b) - (2 * a * c);
+	
+	if(data > 0){
+	  return 1;
+	}
+	else{
+	  return 0;
+	}
+}
+
+//  @ fuction:  
+//  @ description: 计算位置 
+//  @ input:
+//  @ output:
 //  @ note: 关节角度到空间位置
-ARM_Motion_s calculate_forward(const float *cartesian_theta)//感觉有些问题
+ARM_Motion_s calculate_forward(const float *cartesian_theta)
 {
 	float x1,y1;
 	float x2,y2;
@@ -47,6 +70,8 @@ ARM_Motion_s calculate_forward(const float *cartesian_theta)//感觉有些问题
 	arm_motion_temp.arm[X_AXIS]=x2;
 	arm_motion_temp.arm[Y_AXIS]=y2;
 	arm_motion_temp.arm[Z_AXIS]=y1;
+	
+	arm_motion_temp.transfer_state = 0;//no error
 	
   return arm_motion_temp;
 }
@@ -68,6 +93,14 @@ ARM_Motion_s calculate_arm(const float *cartesian)
 				+cartesian[Y_AXIS]*cartesian[Y_AXIS]);
 	TempXYZ=sqrt((TempXY-CENCER_OFFSET-HEAD_OFFSET)*(TempXY-CENCER_OFFSET-HEAD_OFFSET)		
 				+cartesian[Z_AXIS]*cartesian[Z_AXIS]);
+	
+	if(check_angle(BIG_ARM_LENGTH,SMALL_ARM_LENGTH,TempXYZ)){
+	  arm_motion_temp.transfer_state = 1;//error
+	}
+	else{
+	 	arm_motion_temp.transfer_state = 0;//no error
+	}
+	
 	TempX = asin(cartesian[Z_AXIS]/(TempXYZ))+return_angle(BIG_ARM_LENGTH,SMALL_ARM_LENGTH,TempXYZ);
 	TempY = return_angle(BIG_ARM_LENGTH,TempXYZ,SMALL_ARM_LENGTH);
 	TempZ = atan(cartesian[Y_AXIS]/cartesian[X_AXIS]);
@@ -94,7 +127,7 @@ ARM_Motion_s calculate_arm(const float *cartesian)
 //  @ description: 角度复位 
 //  @ input:
 //  @ output:
-//  @ note: 
+//  @ note: 正方向 X(向后) Y(向下)
 void Arm_motion_reset(void){
 //	float init_cartesian[N_AXIS];
 //	memset(init_cartesian, 0 , sizeof(init_cartesian));

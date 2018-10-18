@@ -71,9 +71,9 @@
   // Grbl generic default settings. Should work across different machines.
 	// //360/1.8*16/360*6 =41.48148
 //步进电机齿轮传动，减速比10。如果步距角1.8度，则360／1.8/10=20
-  #define DEFAULT_X_STEPS_PER_MM 			41.48148
-  #define DEFAULT_Y_STEPS_PER_MM 			41.48148
-  #define DEFAULT_Z_STEPS_PER_MM 			41.48148
+  #define DEFAULT_X_STEPS_PER_MM 			86.48
+  #define DEFAULT_Y_STEPS_PER_MM 			86.48
+  #define DEFAULT_Z_STEPS_PER_MM 			86.48
   #define DEFAULT_X_MAX_RATE 				1000.0 // mm/min
   #define DEFAULT_Y_MAX_RATE 				1000.0 // mm/min
   #define DEFAULT_Z_MAX_RATE 				1000.0 // mm/min
@@ -90,6 +90,7 @@
   #define DEFAULT_STEPPING_INVERT_MASK 		0
   #define DEFAULT_DIRECTION_INVERT_MASK 	4	// Invert Z-Axis
   #define DEFAULT_STEPPER_IDLE_LOCK_TIME	25 // msec (0-254, 255 keeps steppers enabled)
+//  #define DEFAULT_STEPPER_IDLE_LOCK_TIME	0xff // msec (0-254, 255 keeps steppers enabled) 设置电机使能时间，0xff表示一直使能(抱死)
   #define DEFAULT_STATUS_REPORT_MASK 		1 // MPos enabled
   #define DEFAULT_JUNCTION_DEVIATION 		0.01 // mm
   #define DEFAULT_ARC_TOLERANCE 			0.001 // mm

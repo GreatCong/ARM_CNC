@@ -135,6 +135,9 @@ uint8_t Planner_BufferLine(float *target, Planner_LineData_t *pl_data)
 #elif defined ARM //增加机械臂
 	  //将targrt转化为角度坐标
 		arm_motion_target =  calculate_arm(target);
+	  if(arm_motion_target.transfer_state > 0){ //不符合余弦定理,有潜在的隐患
+		  return PLAN_EMPTY_BLOCK;//暂时将其定为EMPTY_BLOCK,即不运动
+		}
 #endif
 
 	for(idx = 0; idx < N_AXIS; idx++) {

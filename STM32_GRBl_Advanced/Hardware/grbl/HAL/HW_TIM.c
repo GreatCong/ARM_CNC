@@ -114,6 +114,7 @@ void TIM9_Init(void)
 
 void Stepper_Timer_init(void){
    //HAL库下
+	//TIM3 36Mhz
 //  HAL_TIM_Base_Start_IT(&htim4);//开启溢出中断
   HAL_TIM_OC_Start_IT(&STEP_TIMER,STEP_TIMER_CHANNEL);//开启输出比较中断
 	__HAL_TIM_ENABLE_IT(&STEP_TIMER, TIM_IT_UPDATE);//开启溢出中断

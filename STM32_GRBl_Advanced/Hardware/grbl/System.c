@@ -30,6 +30,8 @@
 #include "System.h"
 #include "System32.h"
 
+#include "Arm_motion.h" //ARM头文件
+
 
 void System_Init(void)
 {
@@ -124,23 +126,29 @@ uint8_t System_CheckSafetyDoorAjar(void)
 void System_ExecuteStartup(char *line)
 {
 #if (N_STARTUP_LINE > 0)
-	uint8_t n;
+//	uint8_t n;
 
-	for(n = 0; n < N_STARTUP_LINE; n++) {
-		if(!(Settings_ReadStartupLine(n, line))) {
-			line[0] = 0;
-			Report_ExecuteStartupMessage(line, STATUS_SETTING_READ_FAIL);
-		}
-		else {
-			if(line[0] != 0) {
-				uint8_t status_code = GC_ExecuteLine(line);
+//	for(n = 0; n < N_STARTUP_LINE; n++) {
+//		if(!(Settings_ReadStartupLine(n, line))) {
+//			line[0] = 0;
+//			Report_ExecuteStartupMessage(line, STATUS_SETTING_READ_FAIL);
+//		}
+//		else {
+//			if(line[0] != 0) {
+//				uint8_t status_code = GC_ExecuteLine(line);
 
-				Report_ExecuteStartupMessage(line,status_code);
-			}
-		}
-	}
+//				Report_ExecuteStartupMessage(line,status_code);
+//			}
+//		}
+//	}
+
 #else
 	(void)line;
+	#ifdef ARM //增加机械臂
+   //初始化的时候，仅仅修改sys_potion,jog模式下反馈有问题，运行一段初始位置的G代码，避免这个问题
+	uint8_t status_code = GC_ExecuteLine(ARM_init_script);
+	Report_ExecuteStartupMessage(ARM_init_script,status_code);
+	#endif
 #endif
 }
 
